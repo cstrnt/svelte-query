@@ -1,13 +1,13 @@
 <script>
-  import AAAA from "./components/Abc.svelte";
-  import BBBB from "./components/Bcd.svelte";
+  import Page1 from "./components/Page1.svelte";
+  import Page2 from "./components/Page2.svelte";
   let current = false;
 </script>
 
 {#if current}
-  <AAAA />
+  <Page1 />
 {:else}
-  <BBBB />
+  <Page2 />
 {/if}
 <br />
 <button on:click={() => (current = !current)}>SWITCH</button>
