@@ -1,9 +1,9 @@
 <script>
-  import { query } from "svelte-query";
+  import { query } from "../../../dist/";
   const post = query("data/2", () =>
-    fetch("https://my-json-server.typicode.com/typicode/demo/posts/2", {
-      headers: { Accept: "application/json" }
-    }).then(r => r.json())
+    fetch("https://my-json-server.typicode.com/typicode/demo/posts/2").then(r =>
+      r.json()
+    )
   );
 </script>
 

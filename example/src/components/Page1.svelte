@@ -1,13 +1,10 @@
 <script>
-  import { query, mutate } from "svelte-query";
-
-  const post = query("data/1", () =>
-    fetch("https://my-json-server.typicode.com/typicode/demo/posts/1", {
-      headers: { Accept: "application/json" }
-    }).then(r => r.json())
-  );
-
+  import { query, mutate } from "../../../dist/";
   let value = "";
+  let shouldFetch = false;
+
+  $: post = query(() => "posts/1");
+
   function send() {
     return fetch("https://my-json-server.typicode.com/typicode/demo/posts/1", {
       method: "PATCH",
@@ -24,11 +21,17 @@
 <h1>Page A</h1>
 <input bind:value />
 <button on:click={() => mutate('data/1', send)}>SEND</button>
+<button on:click={() => (shouldFetch = true)}>Fetch it baby</button>
+<br />
 
-{#if $post.loading}
-  Loading...
-{:else if $post.error}
-  Oh no! {$post.error.message}
+{#if $post.data}
+  {#if $post.loading}
+    Loading...
+  {:else if $post.error}
+    Oh no! {$post.error.message}
+  {:else}
+    <pre>{JSON.stringify($post.data, null, 2)}</pre>
+  {/if}
 {:else}
-  <pre>{JSON.stringify($post.data, null, 2)}</pre>
+  <h1>YIIKES</h1>
 {/if}
