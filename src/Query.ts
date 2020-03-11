@@ -45,24 +45,35 @@ function query<Data = any>(...args: any): Readable<IState<Data>> {
     return { subscribe };
   }
 
-  if (typeof key === "function") {
-    try {
-      key = (key as any)();
-    } catch (e) {
-      update(state => ({ ...state, loading: false, data: undefined }));
-      return { subscribe };
-    }
-  }
-
-  if (typeof fn === "undefined") {
-    // use a global fetcher
-    fn = config.fetcher;
-  }
-
   let interval: number;
   beforeUpdate(async () => {
+    // Check if the provided key is a Prmise
+    if ((key as any) instanceof Promise) {
+      try {
+        // Don't display any data while the promise is resolving
+        update(state => ({ ...state, loading: false, data: undefined }));
+        // If it is a Promise wait for the Promise to resolve
+        const keyVal = await key;
+        if (typeof keyVal === "string") {
+          key = keyVal;
+        }
+      } catch (e) {
+        update(state => ({ ...state, loading: false, data: undefined }));
+        return;
+      }
+    }
     // Only run if key is different to the last key
     if (key !== lastKey) {
+      update(state => ({ ...state, loading: true }));
+      // Check if key is a function
+      if (typeof key === "function") {
+        key = (key as any)();
+      }
+
+      if (typeof fn === "undefined") {
+        // use a global fetcher
+        fn = config.fetcher;
+      }
       lastKey = key;
       // Check cache and return data if cache has data for that key
       if (cache.has(key)) {

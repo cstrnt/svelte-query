@@ -3,7 +3,12 @@
   let value = "";
   let shouldFetch = false;
 
-  $: post = query(() => "posts/1");
+  $: post = query(
+    // new Promise((res, _) => {
+    //   setTimeout(() => res("posts/1"), 3000);
+    // })
+    () => "posts/1"
+  );
 
   function send() {
     return fetch("https://my-json-server.typicode.com/typicode/demo/posts/1", {
