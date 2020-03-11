@@ -1,6 +1,6 @@
 <script>
-  import { swr } from "../../../dist/swr";
-  const post = swr("data/2", () =>
+  import { query } from "svelte-query";
+  const post = query("data/2", () =>
     fetch("https://my-json-server.typicode.com/typicode/demo/posts/2", {
       headers: { Accept: "application/json" }
     }).then(r => r.json())

@@ -1,6 +1,7 @@
 <script>
-  import { swr, mutate } from "../../../dist/swr";
-  const post = swr("data/1", () =>
+  import { query, mutate } from "svelte-query";
+
+  const post = query("data/1", () =>
     fetch("https://my-json-server.typicode.com/typicode/demo/posts/1", {
       headers: { Accept: "application/json" }
     }).then(r => r.json())
@@ -23,6 +24,7 @@
 <h1>Page A</h1>
 <input bind:value />
 <button on:click={() => mutate('data/1', send)}>SEND</button>
+
 {#if $post.loading}
   Loading...
 {:else if $post.error}
