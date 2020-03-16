@@ -1,7 +1,7 @@
 {
   "name": "@sveltecool/svelte-query",
   "scope": "@sveltecool",
-  "version": "0.0.2-alpha",
+  "version": "0.0.2-alpha1",
   "main": "dist/index.js",
   "author": "Tim Raderschad <tim.raderschad@gmail.com>",
   "license": "MIT",
