@@ -52,6 +52,9 @@
   dependencies:
     estree-walker "^1.0.1"
 
+"@sveltecool/svelte-query@../":
+  version "0.0.1-alpha"
+
 "@types/estree@*":
   version "0.0.42"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.42.tgz#8d0c1f480339efedb3e46070e22dd63e0430dd11"
@@ -1100,7 +1103,7 @@ supports-color@^6.1.0:
     has-flag "^3.0.0"
 
 svelte-query@../:
-  version "1.0.0"
+  version "0.0.1-alpha"
 
 svelte@^3.0.0:
   version "3.19.2"

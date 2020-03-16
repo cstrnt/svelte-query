@@ -1,5 +1,5 @@
 <script>
-  import { setConfig } from "svelte-query";
+  import { setConfig } from "../../dist/";
   import Page1 from "./components/Page1.svelte";
   import Page2 from "./components/Page2.svelte";
   let current = false;

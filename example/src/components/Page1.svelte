@@ -25,7 +25,7 @@
 
 <h1>Page A</h1>
 <input bind:value />
-<button on:click={() => mutate('data/1', send)}>SEND</button>
+<button on:click={() => mutate('posts/1', send)}>SEND</button>
 <button on:click={() => (shouldFetch = true)}>Fetch it baby</button>
 <br />
 
