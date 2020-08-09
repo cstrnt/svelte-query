@@ -22,5 +22,8 @@
     "eslint": "^6.8.0",
     "svelte": "^3.19.2",
     "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "is-promise": "^4.0.0"
   }
 }

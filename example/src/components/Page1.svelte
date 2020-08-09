@@ -3,40 +3,35 @@
   let value = "";
   let shouldFetch = false;
 
-  $: post = query(
-    // new Promise((res, _) => {
-    //   setTimeout(() => res("posts/1"), 3000);
-    // })
-    () => "posts/1"
+  const { data: post, refetch } = query(
+    new Promise((res, _) => {
+      setTimeout(() => res("posts/1"), 3000);
+    })
   );
 
   function send() {
     return fetch("https://my-json-server.typicode.com/typicode/demo/posts/1", {
       method: "PATCH",
       body: JSON.stringify({
-        title: value
+        title: value,
       }),
       headers: {
-        "Content-type": "application/json; charset=UTF-8"
-      }
-    }).then(r => r.json());
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    }).then((r) => r.json());
   }
 </script>
 
 <h1>Page A</h1>
 <input bind:value />
 <button on:click={() => mutate('posts/1', send)}>SEND</button>
-<button on:click={() => (shouldFetch = true)}>Fetch it baby</button>
+<button on:click={() => refetch()}>Fetch it baby</button>
 <br />
 
-{#if $post.data}
-  {#if $post.loading}
-    Loading...
-  {:else if $post.error}
-    Oh no! {$post.error.message}
-  {:else}
-    <pre>{JSON.stringify($post.data, null, 2)}</pre>
-  {/if}
-{:else}
-  <h1>YIIKES</h1>
+{#if $post.loading}
+  Loading...
+{:else if $post.error}
+  Oh no! {$post.error.message}
+{:else if $post.data}
+  <pre>{JSON.stringify($post.data, null, 2)}</pre>
 {/if}

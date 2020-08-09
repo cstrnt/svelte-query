@@ -2,24 +2,29 @@ import { beforeUpdate, onDestroy } from "svelte";
 import { Readable } from "svelte/store";
 import { cache } from "./Cache";
 import { update, subscribe } from "./Store";
+import isPromise from "is-promise";
 
 import { getContext } from "./Context";
 import { defaultConfig, IConfig, IFetcherFn, IState } from "./Types";
 
 let lastKey: string | undefined;
 
-function query<Data = any>(key: string): Readable<IState<Data>>;
+function query<Data = any>(
+  key: string
+): { data: Readable<IState<Data>>; refetch: () => void };
 function query<Data = any>(
   key: string,
   config?: IConfig
-): Readable<IState<Data>>;
+): { data: Readable<IState<Data>>; refetch: () => void };
 function query<Data = any>(
   key: string,
   fn?: IFetcherFn<Data>,
   config?: IConfig
-): Readable<IState<Data>>;
+): { data: Readable<IState<Data>>; refetch: () => void };
 
-function query<Data = any>(...args: any): Readable<IState<Data>> {
+function query<Data = any>(
+  ...args: any
+): { data: Readable<IState<Data>>; refetch: () => void } {
   let key: string;
   let fn: IFetcherFn<Data> | undefined;
   let config: any;
@@ -38,33 +43,49 @@ function query<Data = any>(...args: any): Readable<IState<Data>> {
   }
   // Merge configs
   config = Object.assign({}, defaultConfig, getContext(), config);
-
   // @ts-ignore
   if (!key) {
-    update(state => ({ ...state, loading: false, data: undefined }));
-    return { subscribe };
+    throw new Error("You need to define a key");
+  }
+  if (!fn && !config.fetcher) {
+    throw new Error("You need to define a fetching functions");
   }
 
-  let interval: number;
+  const fetcherFunc: IFetcherFn<Data> = fn ? fn : config.fetcher;
+
+  let interval: NodeJS.Timeout;
+
+  const getAndSetData = async () => {
+    if (isPromise(fetcherFunc())) {
+      // Get Data from server and update cache
+      const data = await (fetcherFunc as (...args: any) => Promise<Data>)(
+        key
+      ).catch((error) => {
+        update((state) => ({ ...state, loading: false, error }));
+      });
+      update((state) => ({ ...state, loading: false, data }));
+      cache.set(key, data);
+    }
+  };
   beforeUpdate(async () => {
-    // Check if the provided key is a Prmise
-    if ((key as any) instanceof Promise) {
+    // Check if the provided key is a Promise
+    if (isPromise(key)) {
       try {
         // Don't display any data while the promise is resolving
-        update(state => ({ ...state, loading: false, data: undefined }));
+        update((state) => ({ ...state, loading: false, data: undefined }));
         // If it is a Promise wait for the Promise to resolve
-        const keyVal = await key;
+        const keyVal = await ((key as unknown) as () => Promise<any>)();
         if (typeof keyVal === "string") {
           key = keyVal;
         }
       } catch (e) {
-        update(state => ({ ...state, loading: false, data: undefined }));
+        update((state) => ({ ...state, loading: false, data: undefined }));
         return;
       }
     }
     // Only run if key is different to the last key
     if (key !== lastKey) {
-      update(state => ({ ...state, loading: true }));
+      update((state) => ({ ...state, loading: true }));
       // Check if key is a function
       if (typeof key === "function") {
         key = (key as any)();
@@ -77,37 +98,29 @@ function query<Data = any>(...args: any): Readable<IState<Data>> {
       lastKey = key;
       // Check cache and return data if cache has data for that key
       if (cache.has(key)) {
-        update(state => ({ ...state, loading: false, data: cache.get(key) }));
+        update((state) => ({ ...state, loading: false, data: cache.get(key) }));
       }
 
-      try {
-        // Get Data from server and update cache
-        const data = await fn?.(key);
-        update(state => ({ ...state, loading: false, data }));
-        cache.set(key, data);
-      } catch (error) {
-        // Return the error if something went wrong with the request
-        update(state => ({ ...state, loading: false, error }));
-      }
+      getAndSetData();
 
       // Set refreshInterval if is set through config
       if (config?.refreshInterval) {
         interval = setInterval(async () => {
           try {
             const data = await fn?.(key);
-            update(state => ({ ...state, loading: false, data }));
+            update((state) => ({ ...state, loading: false, data }));
             cache.set(key, data);
           } catch (error) {
-            update(state => ({ ...state, loading: false, error }));
+            update((state) => ({ ...state, loading: false, error }));
           }
         }, config?.refreshInterval);
       }
     }
   });
-  // Delete Interval on Unmount so refreshing stops
+  // Delete interval on unmount so refreshing stops
   onDestroy(() => clearInterval(interval));
 
-  return { subscribe };
+  return { data: { subscribe }, refetch: getAndSetData };
 }
 
 export { query };

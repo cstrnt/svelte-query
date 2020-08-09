@@ -1,9 +1,9 @@
 <script>
   import { query } from "../../../dist/";
-  const post = query("data/2", () =>
-    fetch("https://my-json-server.typicode.com/typicode/demo/posts/2").then(r =>
-      r.json()
-    )
+  const { data: post, refetch } = query("data/2", () =>
+    fetch(
+      "https://my-json-server.typicode.com/typicode/demo/posts/2"
+    ).then((r) => r.json())
   );
 </script>
 
@@ -14,4 +14,5 @@
   Oh no! {$post.error.message}
 {:else}
   <pre>{JSON.stringify($post.data, null, 2)}</pre>
+  <button on:click={refetch}>Refetch</button>
 {/if}

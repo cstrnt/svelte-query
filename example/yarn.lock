@@ -53,7 +53,9 @@
     estree-walker "^1.0.1"
 
 "@sveltecool/svelte-query@../":
-  version "0.0.1-alpha"
+  version "0.0.2-alpha1"
+  dependencies:
+    is-promise "^4.0.0"
 
 "@types/estree@*":
   version "0.0.42"
@@ -589,6 +591,11 @@ is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   dependencies:
     isobject "^3.0.1"
 
+is-promise@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/is-promise/-/is-promise-4.0.0.tgz#42ff9f84206c1991d26debf520dd5c01042dd2f3"
+  integrity sha512-hvpoI6korhJMnej285dSg6nu1+e6uxs7zG3BYAm5byqDsgJNWwxzM6z6iZiAgQR4TJ30JmBTOwqZUw3WlyH3AQ==
+
 is-reference@^1.1.2:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/is-reference/-/is-reference-1.1.4.tgz#3f95849886ddb70256a3e6d062b1a68c13c51427"
@@ -1101,9 +1108,6 @@ supports-color@^6.1.0:
   integrity sha512-qe1jfm1Mg7Nq/NSh6XE24gPXROEVsWHxC1LIx//XNlD9iw7YZQGjZNjYN7xGaEG6iKdA8EtNFW6R0gjnVXp+wQ==
   dependencies:
     has-flag "^3.0.0"
-
-svelte-query@../:
-  version "0.0.1-alpha"
 
 svelte@^3.0.0:
   version "3.19.2"
