@@ -1,14 +1,15 @@
 {
   "name": "@sveltecool/svelte-query",
   "scope": "@sveltecool",
-  "version": "0.0.3-alpha1",
+  "version": "0.0.7-alpha1",
   "main": "dist/index.js",
   "author": "Tim Raderschad <tim.raderschad@gmail.com>",
   "license": "MIT",
   "files": [
     "LICENSE",
     "README.md",
-    "dist/"
+    "dist/",
+    "package.json"
   ],
   "scripts": {
     "dev": "tsc -w",
@@ -19,13 +20,13 @@
   "devDependencies": {
     "@types/is-promise": "^2.1.0",
     "@types/node": "^14.0.27",
-    "@typescript-eslint/eslint-plugin": "^2.23.0",
-    "@typescript-eslint/parser": "^2.23.0",
+    "@typescript-eslint/eslint-plugin": "^2.34.0",
+    "@typescript-eslint/parser": "^2.34.0",
     "eslint": "^6.8.0",
-    "svelte": "^3.19.2",
-    "typescript": "^3.8.3"
+    "svelte": "^3.24.1",
+    "typescript": "^3.9.7"
   },
   "dependencies": {
-    "is-promise": "^4.0.0"
+    "is-promise": "^2.2.2"
   }
 }
