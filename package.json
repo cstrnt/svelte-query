@@ -1,7 +1,7 @@
 {
   "name": "@sveltecool/svelte-query",
   "scope": "@sveltecool",
-  "version": "0.0.2-alpha1",
+  "version": "0.0.3-alpha1",
   "main": "dist/index.js",
   "author": "Tim Raderschad <tim.raderschad@gmail.com>",
   "license": "MIT",
@@ -17,6 +17,8 @@
     "build": "tsc"
   },
   "devDependencies": {
+    "@types/is-promise": "^2.1.0",
+    "@types/node": "^14.0.27",
     "@typescript-eslint/eslint-plugin": "^2.23.0",
     "@typescript-eslint/parser": "^2.23.0",
     "eslint": "^6.8.0",
